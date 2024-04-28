@@ -57,17 +57,22 @@ class MainViewModelTest {
 
     @Test
     fun `should set loading state to true initially`() = runBlocking {
+        // when
         viewModel = createViewModel()
 
+        // then
         assert(viewModel.state.value.isLoading)
     }
 
     @Test
     fun `should show general error when GetCryptoAssetsAction is GeneralError`() = runBlocking {
+        // given
         coEvery { bitfinexRepository.getCryptoAssetss() } returns GetCryptoAssetsAction.GeneralError
 
+        // when
         viewModel = createViewModel()
 
+        // then
         assert(viewModel.state.value.isGeneralError)
         assert(!viewModel.state.value.isLoading)
         assert(!viewModel.state.value.isNetworkError)
@@ -76,10 +81,13 @@ class MainViewModelTest {
     @Test
     fun `should show network error when GetCryptoAssetsAction is NetworkException`() =
         runBlocking {
+            // given
             coEvery { bitfinexRepository.getCryptoAssetss() } returns GetCryptoAssetsAction.NetworkException
 
+            // when
             viewModel = createViewModel()
 
+            // then
             assert(!viewModel.state.value.isGeneralError)
             assert(!viewModel.state.value.isLoading)
             assert(viewModel.state.value.isNetworkError)
@@ -92,8 +100,10 @@ class MainViewModelTest {
         val query = "BTC"
         viewModel = createViewModel()
 
+        // when
         viewModel.event(MainContract.Event.SearchQueryChange(query))
 
+        // then
         coVerify { bitfinexRepository.getCryptoAssetss() }
         assert(viewModel.state.value.cryptoAssets.isNotEmpty())
         assert(viewModel.state.value.cryptoAssets == cryptoAssets)
@@ -108,8 +118,10 @@ class MainViewModelTest {
         val query = ""
         viewModel = createViewModel()
 
+        // when
         viewModel.event(MainContract.Event.SearchQueryChange(query))
 
+        // then
         coVerify { bitfinexRepository.getCryptoAssetss() }
         assert(viewModel.state.value.cryptoAssets.isNotEmpty())
         assert(viewModel.state.value.cryptoAssets == cryptoAssets)

@@ -62,17 +62,17 @@ class BitfinexRepositoryTest {
 
     @Test
     fun `getCryptoAssets - successful response`() {
-        //given
+        // given
         coEvery { bitfinexService.getTickers(any()) } returns response
         coEvery { response.isSuccessful } returns true
         coEvery { response.body() } returns responseBody
         coEvery { tickerMapper.parseTickerData(responseBody.first()) } returns ticker
         coEvery { cryptoAssetMapper.convertToCryptoAsset(ticker) } returns cryptoAsset
 
-        //when
+        // when
         val result = runBlocking { bitfinexRepository.getCryptoAssetss() }
 
-        //then
+        // then
         Assert.assertTrue(result is GetCryptoAssetsAction.Success)
         coVerify { bitfinexService.getTickers(any()) }
         coVerify { tickerMapper.parseTickerData(responseBody.first()) }
@@ -84,29 +84,27 @@ class BitfinexRepositoryTest {
 
     @Test
     fun `getCryptoAssets - network exception`() {
+        // given
         val mockException = IOException("Network error")
-
-        // Mock dependencies
         coEvery { bitfinexService.getTickers(any()) } throws mockException
 
-        // Call the method
+        // when
         val result = runBlocking { bitfinexRepository.getCryptoAssetss() }
 
-        // Assert network exception
+        // then
         assertTrue(result is GetCryptoAssetsAction.NetworkException)
     }
 
     @Test
     fun `getCryptoAssets - general error`() {
         val mockException = RuntimeException("Unexpected error")
-
-        // Mock dependencies
+        // given
         coEvery { bitfinexService.getTickers(any()) } throws mockException
 
-        // Call the method
+        // when
         val result = runBlocking { bitfinexRepository.getCryptoAssetss() }
 
-        // Assert general error
+        // then
         assertTrue(result is GetCryptoAssetsAction.GeneralError)
     }
 }
