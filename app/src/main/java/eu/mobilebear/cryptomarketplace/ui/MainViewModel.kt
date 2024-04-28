@@ -38,6 +38,7 @@ class MainViewModel @Inject constructor(
     override val effect = _effect.receiveAsFlow()
 
     private var refreshJob: Job? = null
+
     override fun event(event: MainContract.Event) {
         when (event) {
             MainContract.Event.ClearSearchClicked -> _state.update {
