@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Crypto Marketplace</string>
+    <string name="crypto_asset_last_price">%.3f USD</string>
+    <string name="crypto_asset_daily_change">%.2f%%</string>
 </resources>

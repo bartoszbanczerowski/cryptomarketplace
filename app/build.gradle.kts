@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.ksp)
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -37,7 +39,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.12"
     }
     packaging {
         resources {
@@ -56,6 +58,21 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.hilt.navigation)
+    implementation(libs.okhttp3)
+    implementation(libs.okhttp3.logginginterceptor)
+    implementation(libs.retrofit2)
+    implementation(libs.retrofit2.moshi)
+    debugImplementation(libs.chucker.debug)
+    releaseImplementation(libs.chucker.release)
+    implementation(libs.timber)
+    implementation(libs.moshi)
+    ksp(libs.moshi.codegen)
+    implementation(libs.moshi.adapters)
+    implementation(libs.hilt)
+    ksp(libs.hilt.compiler)
+    implementation(libs.lottie)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
