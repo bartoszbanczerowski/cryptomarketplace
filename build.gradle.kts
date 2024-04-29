@@ -13,10 +13,5 @@ buildscript {
 
     dependencies {
         classpath(libs.hiltgradle)
-//        classpath(libs.oss.licenses.plugin)
-//        classpath(libs.gradle)
-//        classpath(libs.google.services)
-//        classpath(libs.firebase.crashlytics.gradle)
-//        classpath(libs.kotlin.gradle)
     }
 }
