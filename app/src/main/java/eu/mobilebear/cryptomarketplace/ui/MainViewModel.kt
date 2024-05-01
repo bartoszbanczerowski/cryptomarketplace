@@ -60,46 +60,42 @@ class MainViewModel @Inject constructor(
     }
 
     init {
-        getCryptoAssetsInInterval()
+        getCryptoAssets()
     }
 
     private fun getCryptoAssets() {
         viewModelScope.launch(ioDispatcher) {
-            if (_state.value.cryptoAssets.isEmpty()) {
-                _state.update { it.copy(isLoading = true) }
-            }
-            val action = bitfinexRepository.getCryptoAssetss()
-            withContext(mainDispatcher) {
-                when (action) {
-                    GetCryptoAssetsAction.GeneralError -> _state.update {
-                        it.copy(isLoading = false, isGeneralError = true, isNetworkError = false)
-                    }
+            while (isActive) {
+                if (_state.value.cryptoAssets.isEmpty()) {
+                    _state.update { it.copy(isLoading = true) }
+                }
+                val action = bitfinexRepository.getCryptoAssetss()
+                withContext(mainDispatcher) {
+                    when (action) {
+                        GetCryptoAssetsAction.GeneralError -> _state.update {
+                            it.copy(isLoading = false, isGeneralError = true, isNetworkError = false)
+                        }
 
-                    GetCryptoAssetsAction.NetworkException -> _state.update {
-                        it.copy(isLoading = false, isGeneralError = false, isNetworkError = true)
-                    }
+                        GetCryptoAssetsAction.NetworkException -> _state.update {
+                            it.copy(isLoading = false, isGeneralError = false, isNetworkError = true)
+                        }
 
-                    is GetCryptoAssetsAction.Success -> _state.update {
-                        it.copy(
-                            isLoading = false,
-                            isGeneralError = false,
-                            isNetworkError = false,
-                            searchQuery = it.searchQuery,
-                            cryptoAssets = action.cryptoAssets,
-                            filteredCryptoAssets = filterCryptoAssets(action.cryptoAssets, it.searchQuery)
-                        )
+                        is GetCryptoAssetsAction.Success -> _state.update {
+                            it.copy(
+                                isLoading = false,
+                                isGeneralError = false,
+                                isNetworkError = false,
+                                searchQuery = it.searchQuery,
+                                cryptoAssets = action.cryptoAssets,
+                                filteredCryptoAssets = filterCryptoAssets(action.cryptoAssets, it.searchQuery)
+                            )
+                        }
                     }
                 }
-            }
-        }
-    }
 
-    private fun getCryptoAssetsInInterval() {
-        refreshJob = viewModelScope.launch(ioDispatcher) {
-            while (isActive) {
-                getCryptoAssets()
                 delay(5000)
             }
+
         }
     }
 

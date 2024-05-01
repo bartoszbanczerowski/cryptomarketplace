@@ -10,7 +10,6 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
@@ -29,11 +28,6 @@ class MainViewModelTest {
     )
 
     private lateinit var viewModel: MainViewModel
-
-    @Before
-    fun setUp() {
-        viewModel = createViewModel()
-    }
 
     private fun createViewModel() = MainViewModel(
         bitfinexRepository = bitfinexRepository,
