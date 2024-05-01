@@ -9,7 +9,6 @@ import eu.mobilebear.cryptomarketplace.data.model.Main
 import eu.mobilebear.cryptomarketplace.domain.GetCryptoAssetsAction
 import eu.mobilebear.cryptomarketplace.domain.model.CryptoAsset
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,8 +35,6 @@ class MainViewModel @Inject constructor(
 
     private val _effect = Channel<MainContract.Effect>()
     override val effect = _effect.receiveAsFlow()
-
-    private var refreshJob: Job? = null
 
     override fun event(event: MainContract.Event) {
         when (event) {
@@ -108,9 +105,4 @@ class MainViewModel @Inject constructor(
                 )
             } else true
         }
-
-    override fun onCleared() {
-        super.onCleared()
-        refreshJob?.cancel()
-    }
 }
