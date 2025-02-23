@@ -4,7 +4,6 @@ import android.content.res.Configuration
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -36,7 +35,9 @@ fun CryptoAssetItem(
     dailyChangeRelative: Double
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 4.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
@@ -53,20 +54,18 @@ fun CryptoAssetItem(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                Box(modifier = Modifier.fillMaxHeight()) {
-                    Row(
-                        modifier = Modifier.fillMaxHeight(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Image(
-                            painterResource(id = icon),
-                            modifier = Modifier.size(40.dp),
-                            contentDescription = "$name icon",
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(text = name, style = MaterialTheme.typography.titleLarge)
-                    }
+                Row(
+                    modifier = Modifier.fillMaxHeight(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painterResource(id = icon),
+                        modifier = Modifier.size(40.dp),
+                        contentDescription = "$name icon",
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = name, style = MaterialTheme.typography.titleLarge)
                 }
 
                 Text(

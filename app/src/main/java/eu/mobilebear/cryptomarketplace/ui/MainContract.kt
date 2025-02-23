@@ -16,8 +16,9 @@ interface MainContract : ViewModelContract<MainContract.Event, MainContract.Effe
         val cryptoAssets: List<CryptoAsset> = emptyList(),
         val filteredCryptoAssets: List<CryptoAsset> = emptyList(),
         val searchQuery: String = "",
-        val isLoading: Boolean = false,
+        val isLoading: Boolean = true,
         val isNetworkError: Boolean = false,
-        val isGeneralError: Boolean = false
+        val isGeneralError: Boolean = false,
+        val isAnalyticsEnabled: Boolean = false
     )
 }

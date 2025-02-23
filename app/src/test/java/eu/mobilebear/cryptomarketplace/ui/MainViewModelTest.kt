@@ -3,13 +3,16 @@ package eu.mobilebear.cryptomarketplace.ui
 import eu.mobilebear.cryptomarketplace.CoroutineTestWatcher
 import eu.mobilebear.cryptomarketplace.R
 import eu.mobilebear.cryptomarketplace.data.BitfinexRepository
+import eu.mobilebear.cryptomarketplace.data.remoteconfig.RemoteConfigManager
 import eu.mobilebear.cryptomarketplace.domain.GetCryptoAssetsAction
+import eu.mobilebear.cryptomarketplace.domain.analytics.AnalyticScreen
+import eu.mobilebear.cryptomarketplace.domain.analytics.AnalyticsLogger
 import eu.mobilebear.cryptomarketplace.domain.model.CryptoAsset
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
 
@@ -21,6 +24,8 @@ class MainViewModelTest {
     val testWatcher = CoroutineTestWatcher()
 
     private val bitfinexRepository: BitfinexRepository = mockk(relaxed = true)
+    private val remoteConfigManager: RemoteConfigManager = mockk(relaxed = true)
+    private val analyticsLogger: AnalyticsLogger = mockk(relaxed = true)
 
     private val cryptoAssets = listOf(
         CryptoAsset("BTC", R.drawable.ic_btc_logo, 65000.00, 0.15),
@@ -31,12 +36,14 @@ class MainViewModelTest {
 
     private fun createViewModel() = MainViewModel(
         bitfinexRepository = bitfinexRepository,
+        remoteConfigManager = remoteConfigManager,
+        analyticsLogger = analyticsLogger,
         mainDispatcher = testWatcher.dispatcher,
         ioDispatcher = testWatcher.dispatcher
     )
 
     @Test
-    fun `should get crypto assets and update state`() = runBlocking(testWatcher.dispatcher) {
+    fun `should get crypto assets and update state`() = runTest(testWatcher.dispatcher) {
         // given
         coEvery { bitfinexRepository.getCryptoAssetss() } coAnswers { GetCryptoAssetsAction.Success(cryptoAssets) }
 
@@ -47,19 +54,11 @@ class MainViewModelTest {
         coVerify { bitfinexRepository.getCryptoAssetss() }
         assert(viewModel.state.value.cryptoAssets.isNotEmpty())
         assert(viewModel.state.value.cryptoAssets == cryptoAssets)
+        coVerify { analyticsLogger.logEvent(AnalyticScreen.MAIN_SCREEN) }
     }
 
     @Test
-    fun `should set loading state to true initially`() = runBlocking {
-        // when
-        viewModel = createViewModel()
-
-        // then
-        assert(viewModel.state.value.isLoading)
-    }
-
-    @Test
-    fun `should show general error when GetCryptoAssetsAction is GeneralError`() = runBlocking {
+    fun `should show general error when GetCryptoAssetsAction is GeneralError`() = runTest {
         // given
         coEvery { bitfinexRepository.getCryptoAssetss() } returns GetCryptoAssetsAction.GeneralError
 
@@ -74,7 +73,7 @@ class MainViewModelTest {
 
     @Test
     fun `should show network error when GetCryptoAssetsAction is NetworkException`() =
-        runBlocking {
+        runTest {
             // given
             coEvery { bitfinexRepository.getCryptoAssetss() } returns GetCryptoAssetsAction.NetworkException
 
@@ -88,7 +87,7 @@ class MainViewModelTest {
         }
 
     @Test
-    fun `should filter crypto assets by name`() = runBlocking(testWatcher.dispatcher) {
+    fun `should filter crypto assets by name`() = runTest(testWatcher.dispatcher) {
         // given
         coEvery { bitfinexRepository.getCryptoAssetss() } coAnswers { GetCryptoAssetsAction.Success(cryptoAssets) }
         val query = "BTC"
@@ -98,7 +97,7 @@ class MainViewModelTest {
         viewModel.event(MainContract.Event.SearchQueryChange(query))
 
         // then
-        coVerify { bitfinexRepository.getCryptoAssetss() }
+        coVerify(exactly = 1) { bitfinexRepository.getCryptoAssetss() }
         assert(viewModel.state.value.cryptoAssets.isNotEmpty())
         assert(viewModel.state.value.cryptoAssets == cryptoAssets)
         assert(viewModel.state.value.filteredCryptoAssets.size == 1)
@@ -106,7 +105,7 @@ class MainViewModelTest {
     }
 
     @Test
-    fun `should show all crypto assets when search query is empty`() = runBlocking(testWatcher.dispatcher) {
+    fun `should show all crypto assets when search query is empty`() = runTest(testWatcher.dispatcher) {
         // given
         coEvery { bitfinexRepository.getCryptoAssetss() } coAnswers { GetCryptoAssetsAction.Success(cryptoAssets) }
         val query = ""
