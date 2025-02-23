@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "753673843060",
+    "project_id": "crypto-market-e0fbd",
+    "storage_bucket": "crypto-market-e0fbd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:753673843060:android:64a74757374e75360d3c21",
+        "android_client_info": {
+          "package_name": "eu.mobilebear.cryptomarketplace"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDC_SxD6H6j08-i_CbSotrxEt_zw23NLMs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:753673843060:android:448f886c2ec6c1490d3c21",
+        "android_client_info": {
+          "package_name": "eu.mobilebear.cryptomarketplace.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDC_SxD6H6j08-i_CbSotrxEt_zw23NLMs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
