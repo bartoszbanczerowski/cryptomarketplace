@@ -4,6 +4,7 @@ import eu.mobilebear.cryptomarketplace.R
 import eu.mobilebear.cryptomarketplace.data.mapper.TickerMapper
 import eu.mobilebear.cryptomarketplace.data.model.Ticker
 import eu.mobilebear.cryptomarketplace.domain.GetCryptoAssetsAction
+import eu.mobilebear.cryptomarketplace.domain.analytics.AnalyticsLogger
 import eu.mobilebear.cryptomarketplace.domain.mapper.CryptoAssetMapper
 import eu.mobilebear.cryptomarketplace.domain.model.CryptoAsset
 import io.mockk.coEvery
@@ -20,12 +21,10 @@ import retrofit2.Response
 
 class BitfinexRepositoryTest {
 
-    private val bitfinexService: BitfinexService = mockk()
-
-    private val tickerMapper: TickerMapper = mockk()
-
-    private val cryptoAssetMapper: CryptoAssetMapper = mockk()
-
+    private val bitfinexService: BitfinexService = mockk(relaxed = true)
+    private val tickerMapper: TickerMapper = mockk(relaxed = true)
+    private val cryptoAssetMapper: CryptoAssetMapper = mockk(relaxed = true)
+    private val analyticsLogger: AnalyticsLogger = mockk(relaxed = true)
     private val response: Response<List<List<Any>>> = mockk(relaxed = true)
 
     private val ticker: Ticker = Ticker(
@@ -57,7 +56,7 @@ class BitfinexRepositoryTest {
 
     @Before
     fun setUp() {
-        bitfinexRepository = BitfinexRepository(bitfinexService, tickerMapper, cryptoAssetMapper)
+        bitfinexRepository = BitfinexRepository(bitfinexService, tickerMapper, cryptoAssetMapper, analyticsLogger)
     }
 
     @Test
